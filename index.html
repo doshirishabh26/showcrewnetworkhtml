@@ -1,153 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="ROKKA CYBERLABS - Cybersecurity Solutions for Critical Infrastructure and Railways">
-    <title>ROKKA CYBERLABS | Cybersecurity Solutions</title>
-    <link rel="stylesheet" href="style.css">
+  <title>ShowCrewNetwork Payment Model Comparison</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f5f7fa;
+    }
+    h1, h2 {
+      color: #1a2b49;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+      background-color: white;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #1a2b49;
+      color: white;
+    }
+    .highlight {
+      background-color: #e8f2ff;
+    }
+    .section {
+      margin-bottom: 60px;
+    }
+    .note {
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">
-                <h2>ROKKA CYBERLABS</h2>
-            </div>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>The Security Solution for <span class="highlight">Every Industry</span></h1>
-                <p>Protecting Critical Infrastructure with Advanced Cybersecurity Solutions</p>
-                <a href="#contact" class="btn btn-primary">Get Started</a>
-            </div>
-        </div>
-    </section>
+<h1>ShowCrewNetwork – Payment Infrastructure Comparison</h1>
+<h2>Scenario: $1,000 Payment from Hiring Company to Crew</h2>
 
-    <!-- Services Section -->
-    <section id="services" class="services">
-        <div class="container">
-            <div class="section-header">
-                <h2>Our Services</h2>
-                <p>Comprehensive cybersecurity solutions tailored for critical infrastructure</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🚆</div>
-                    <h3>Railway TMMS Solutions</h3>
-                    <p>Telecom Maintenance Management System for Indian Railways with real-time monitoring, asset management, and GIS integration.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🛡️</div>
-                    <h3>Security Assessment</h3>
-                    <p>Comprehensive security audits and vulnerability assessments for enterprise and government infrastructure.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🏭</div>
-                    <h3>OT Security</h3>
-                    <p>Operational Technology security solutions for industrial control systems and critical infrastructure.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">📋</div>
-                    <h3>Compliance & Advisory</h3>
-                    <p>Expert guidance on cybersecurity compliance, regulatory requirements, and best practices.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🔒</div>
-                    <h3>Managed Security</h3>
-                    <p>24/7 security monitoring, incident response, and threat management services.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🔍</div>
-                    <h3>Cyber Forensic Services</h3>
-                    <p>Digital forensics and incident investigation for security breaches and cyber threats.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="section">
+<h2>1️⃣ Stripe Connect Marketplace Model</h2>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <h2>About ROKKA CYBERLABS</h2>
-                <p>ROKKA CYBERLABS PRIVATE LIMITED is a leading cybersecurity solutions provider specializing in critical infrastructure protection, with particular expertise in railway systems and operational technology security.</p>
-                <p>Our mission is to deliver cutting-edge cybersecurity solutions that protect organizations from evolving threats while ensuring compliance with industry standards and regulatory requirements.</p>
-                <div class="about-stats">
-                    <div class="stat">
-                        <h3>100%</h3>
-                        <p>Client Satisfaction</p>
-                    </div>
-                    <div class="stat">
-                        <h3>24/7</h3>
-                        <p>Security Monitoring</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Expert</h3>
-                        <p>Team</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<table>
+<tr>
+<th>Item</th>
+<th>Credit Card</th>
+<th>ACH Debit</th>
+</tr>
+<tr>
+<td>Processing Fee</td>
+<td>2.9% + $0.30 = $29.30</td>
+<td>0.8% (capped at $5) = $5.00</td>
+</tr>
+<tr>
+<td>Payout Fee (US)</td>
+<td>$0</td>
+<td>$0</td>
+</tr>
+<tr>
+<td>Dispute Fee (Card Only)</td>
+<td>~$15 per dispute</td>
+<td>~$4–$5 ACH return fee</td>
+</tr>
+<tr class="highlight">
+<td>Total Platform Cost</td>
+<td>$29.30</td>
+<td>$5.00</td>
+</tr>
+<tr class="highlight">
+<td>Amount Remaining (Before Commission)</td>
+<td>$970.70</td>
+<td>$995.00</td>
+</tr>
+</table>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2>Get In Touch</h2>
-                <p>Ready to secure your infrastructure? Contact us today.</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="info-item">
-                        <h3>📧 Email</h3>
-                        <p>rokkacyberlabsprivatelimited@gmail.com</p>
-                    </div>
-                    <div class="info-item">
-                        <h3>📍 Address</h3>
-                        <p>W-50, Sector-11, Noida<br>Gautam Buddha Nagar, Noida<br>Uttar Pradesh, India, 201301</p>
-                    </div>
-                    <div class="info-item">
-                        <h3>🏢 Registration</h3>
-                        <p>CIN: U62020UP2025PTC234643<br>ROC: Kanpur</p>
-                    </div>
-                </div>
-                <form class="contact-form" id="contactForm">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <input type="text" placeholder="Subject" required>
-                    <textarea placeholder="Your Message" rows="5" required></textarea>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
-            </div>
-        </div>
-    </section>
+<p><strong>Capabilities:</strong></p>
+<ul>
+<li>Full control over payment method (can disable credit cards)</li>
+<li>Can enforce ACH-only for $600+ jobs</li>
+<li>Built-in W-9 collection</li>
+<li>Automatic 1099 issuance</li>
+<li>Escrow-style fund holding</li>
+<li>No domestic transfer fee</li>
+</ul>
+</div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 ROKKA CYBERLABS PRIVATE LIMITED. All rights reserved.</p>
-            <p>Registered Office: W-50, Sector-11, Noida, Gautam Buddha Nagar, Uttar Pradesh, India, 201301</p>
-        </div>
-    </footer>
+<div class="section">
+<h2>2️⃣ PayPal Marketplace (Commerce Platform)</h2>
 
-    <!-- THIS IS THE CRITICAL PART - Script MUST be here at the end -->
-    <script src="script.js"></script>
+<table>
+<tr>
+<th>Item</th>
+<th>PayPal (Card or Bank)</th>
+</tr>
+<tr>
+<td>Processing Fee</td>
+<td>3.49% + $0.49 = $35.39</td>
+</tr>
+<tr>
+<td>Payout Fee</td>
+<td>$0 (internal split)</td>
+</tr>
+<tr>
+<td>Dispute Handling</td>
+<td>PayPal Resolution Center</td>
+</tr>
+<tr class="highlight">
+<td>Total Platform Cost</td>
+<td>$35.39</td>
+</tr>
+<tr class="highlight">
+<td>Amount Remaining (Before Commission)</td>
+<td>$964.61</td>
+</tr>
+</table>
+
+<p><strong>Capabilities:</strong></p>
+<ul>
+<li>Cannot control funding source (buyer chooses card/bank)</li>
+<li>No built-in W-9 collection</li>
+<li>No built-in 1099 issuance</li>
+<li>Marketplace approval required</li>
+<li>Wallet-based dispute system</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>3️⃣ PayPal Manual Escrow Model (3 Account Model)</h2>
+
+<table>
+<tr>
+<th>Item</th>
+<th>PayPal Manual Escrow</th>
+</tr>
+<tr>
+<td>Processing Fee</td>
+<td>3.49% + $0.49 = $35.39</td>
+</tr>
+<tr>
+<td>Payout Fee</td>
+<td>$0.25</td>
+</tr>
+<tr class="highlight">
+<td>Total Platform Cost</td>
+<td>$35.64</td>
+</tr>
+<tr class="highlight">
+<td>Amount Remaining (Before Commission)</td>
+<td>$964.36</td>
+</tr>
+</table>
+
+<p><strong>Capabilities:</strong></p>
+<ul>
+<li>Manual payout required</li>
+<li>$0.25 payout fee per transfer</li>
+<li>No tax form automation</li>
+<li>Limited payment method control</li>
+<li>Wallet-based structure</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Payment Method Control Comparison</h2>
+
+<table>
+<tr>
+<th>Feature</th>
+<th>Stripe</th>
+<th>PayPal</th>
+</tr>
+<tr>
+<td>Disable Credit Cards</td>
+<td>Yes (ACH-only possible)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Force ACH for $600+ jobs</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Escrow Hold Until Gig Completion</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Automatic 1099 Issuance</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>W-9 Collection</td>
+<td>Yes (via Connect)</td>
+<td>No</td>
+</tr>
+</table>
+</div>
+
+<div class="section">
+<h2>Dispute Risk Comparison</h2>
+
+<table>
+<tr>
+<th>Payment Type</th>
+<th>Dispute Window</th>
+<th>Dispute Fee</th>
+<th>Risk Level</th>
+</tr>
+<tr>
+<td>Stripe Credit Card</td>
+<td>Up to 120+ days</td>
+<td>~$15</td>
+<td>Higher</td>
+</tr>
+<tr>
+<td>Stripe ACH Debit</td>
+<td>Up to 60 days (unauthorized claims)</td>
+<td>~$4–$5</td>
+<td>Lower (B2B)</td>
+</tr>
+<tr>
+<td>PayPal</td>
+<td>Resolution Center + Chargeback</td>
+<td>Varies</td>
+<td>Medium</td>
+</tr>
+</table>
+</div>
+
+
+
+<div class="section">
+<h2>Feature Comparison – Compliance & Payment Control</h2>
+
+<table>
+<tr>
+<th>Feature</th>
+<th>Stripe Connect Marketplace</th>
+<th>PayPal Marketplace (Commerce Platform)</th>
+<th>PayPal Manual Escrow (3 Accounts)</th>
+</tr>
+
+<tr>
+<td><strong>W-9 Collection</strong></td>
+<td>Yes (Built-in during onboarding)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+
+<tr>
+<td><strong>1099 Issuance</strong></td>
+<td>Yes (Automatic 1099-K / 1099-NEC reporting)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+
+<tr>
+<td><strong>SSN Verification</strong></td>
+<td>Yes (via Stripe Connect onboarding)</td>
+<td>Limited (PayPal verifies account, not exposed to platform)</td>
+<td>Limited (PayPal verifies internally only)</td>
+</tr>
+
+<tr>
+<td><strong>Can Accept ACH Only (Disable Cards)</strong></td>
+<td>Yes (Full payment method control)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+
+<tr>
+<td><strong>Escrow-Style Hold Until Gig Completion</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td><strong>Automatic Tax Reporting Dashboard</strong></td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+
+<tr>
+<td><strong>Full API Control Over Payment Lifecycle</strong></td>
+<td>High</td>
+<td>Medium</td>
+<td>Low</td>
+</tr>
+
+<tr>
+<td><strong>Can Payments be manually stopped</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+
+</table>
+</div>
+
+<div class="section">
+<h2>Executive Summary</h2>
+
+<ul>
+<li><strong>Lowest Cost:</strong> Stripe ACH (0.8% capped at $5)</li>
+<li><strong>Best Control:</strong> Stripe Connect</li>
+<li><strong>Built-in Tax Compliance:</strong> Stripe (W-9 + 1099)</li>
+<li><strong>Higher Cost Option:</strong> PayPal (3.49% + $0.49)</li>
+<li><strong>Most Flexible Marketplace Model and the recommendation:</strong> Stripe</li>
+</ul>
+
+<p class="note">
+All fees shown based on standard US pricing. Actual negotiated rates may vary.
+</p>
+
+</div>
+
+
 </body>
 </html>
