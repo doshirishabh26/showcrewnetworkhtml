@@ -28,6 +28,7 @@
     }
     .highlight {
       background-color: #e8f2ff;
+      font-weight: bold;
     }
     .section {
       margin-bottom: 60px;
@@ -63,31 +64,16 @@
 <td>$0</td>
 </tr>
 <tr>
-<td>Dispute Fee (Card Only)</td>
+<td>Dispute / Return Fee</td>
 <td>~$15 per dispute</td>
-<td>~$4–$5 ACH return fee</td>
+<td>~$4–$5 ACH return</td>
 </tr>
 <tr class="highlight">
 <td>Total Platform Cost</td>
 <td>$29.30</td>
 <td>$5.00</td>
 </tr>
-<tr class="highlight">
-<td>Amount Remaining (Before Commission)</td>
-<td>$970.70</td>
-<td>$995.00</td>
-</tr>
 </table>
-
-<p><strong>Capabilities:</strong></p>
-<ul>
-<li>Full control over payment method (can disable credit cards)</li>
-<li>Can enforce ACH-only for $600+ jobs</li>
-<li>Built-in W-9 collection</li>
-<li>Automatic 1099 issuance</li>
-<li>Escrow-style fund holding</li>
-<li>No domestic transfer fee</li>
-</ul>
 </div>
 
 <div class="section">
@@ -114,20 +100,7 @@
 <td>Total Platform Cost</td>
 <td>$35.39</td>
 </tr>
-<tr class="highlight">
-<td>Amount Remaining (Before Commission)</td>
-<td>$964.61</td>
-</tr>
 </table>
-
-<p><strong>Capabilities:</strong></p>
-<ul>
-<li>Cannot control funding source (buyer chooses card/bank)</li>
-<li>No built-in W-9 collection</li>
-<li>No built-in 1099 issuance</li>
-<li>Marketplace approval required</li>
-<li>Wallet-based dispute system</li>
-</ul>
 </div>
 
 <div class="section">
@@ -150,91 +123,52 @@
 <td>Total Platform Cost</td>
 <td>$35.64</td>
 </tr>
+</table>
+</div>
+
+<div class="section">
+<h2>4️⃣ Adyen for Platforms</h2>
+
+<table>
+<tr>
+<th>Item</th>
+<th>Credit Card (Interchange++)</th>
+<th>ACH Direct Debit (US)</th>
+</tr>
+<tr>
+<td>Processing Structure</td>
+<td>Interchange + 0.60% + $0.13</td>
+<td>$0.13 + $0.27</td>
+</tr>
+<tr>0
+<td>~$24–$30 (depends on card type)</td>
+<td>$0.40 flat</td>
+</tr>
+<tr>
+<td>Payout Fee (US)</td>
+<td>$0</td>
+<td>$0</td>
+</tr>
+<tr>
+<td>Dispute / Return Fee</td>
+<td>~$15–$25 chargeback</td>
+<td>~$5–$10 ACH return</td>
+</tr>
 <tr class="highlight">
-<td>Amount Remaining (Before Commission)</td>
-<td>$964.36</td>
+<td>Total Platform Cost (Example)</td>
+<td>~$24–$30</td>
+<td>$0.40</td>
 </tr>
 </table>
 
-<p><strong>Capabilities:</strong></p>
+<p><strong>Notes:</strong></p>
 <ul>
-<li>Manual payout required</li>
-<li>$0.25 payout fee per transfer</li>
-<li>No tax form automation</li>
-<li>Limited payment method control</li>
-<li>Wallet-based structure</li>
+<li>Card pricing varies based on interchange (consumer vs corporate cards)</li>
+<li>ACH is flat $0.40 per transaction</li>
+<li>No built-in W-9 collection</li>
+<li>No automatic 1099 issuance</li>
 </ul>
 </div>
-
-<div class="section">
-<h2>Payment Method Control Comparison</h2>
-
-<table>
-<tr>
-<th>Feature</th>
-<th>Stripe</th>
-<th>PayPal</th>
-</tr>
-<tr>
-<td>Disable Credit Cards</td>
-<td>Yes (ACH-only possible)</td>
-<td>No</td>
-</tr>
-<tr>
-<td>Force ACH for $600+ jobs</td>
-<td>Yes</td>
-<td>No</td>
-</tr>
-<tr>
-<td>Escrow Hold Until Gig Completion</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Automatic 1099 Issuance</td>
-<td>Yes</td>
-<td>No</td>
-</tr>
-<tr>
-<td>W-9 Collection</td>
-<td>Yes (via Connect)</td>
-<td>No</td>
-</tr>
-</table>
-</div>
-
-<div class="section">
-<h2>Dispute Risk Comparison</h2>
-
-<table>
-<tr>
-<th>Payment Type</th>
-<th>Dispute Window</th>
-<th>Dispute Fee</th>
-<th>Risk Level</th>
-</tr>
-<tr>
-<td>Stripe Credit Card</td>
-<td>Up to 120+ days</td>
-<td>~$15</td>
-<td>Higher</td>
-</tr>
-<tr>
-<td>Stripe ACH Debit</td>
-<td>Up to 60 days (unauthorized claims)</td>
-<td>~$4–$5</td>
-<td>Lower (B2B)</td>
-</tr>
-<tr>
-<td>PayPal</td>
-<td>Resolution Center + Chargeback</td>
-<td>Varies</td>
-<td>Medium</td>
-</tr>
-</table>
-</div>
-
-
 
 <div class="section">
 <h2>Feature Comparison – Compliance & Payment Control</h2>
@@ -242,65 +176,58 @@
 <table>
 <tr>
 <th>Feature</th>
-<th>Stripe Connect Marketplace</th>
-<th>PayPal Marketplace (Commerce Platform)</th>
-<th>PayPal Manual Escrow (3 Accounts)</th>
+<th>Stripe Connect</th>
+<th>PayPal Marketplace</th>
+<th>PayPal Manual Escrow</th>
+<th>Adyen for Platforms</th>
 </tr>
 
 <tr>
 <td><strong>W-9 Collection</strong></td>
-<td>Yes (Built-in during onboarding)</td>
+<td>Yes</td>
+<td>No</td>
 <td>No</td>
 <td>No</td>
 </tr>
 
 <tr>
 <td><strong>1099 Issuance</strong></td>
-<td>Yes (Automatic 1099-K / 1099-NEC reporting)</td>
+<td>Yes (automatic)</td>
 <td>No</td>
-<td>No</td>
-</tr>
-
-<tr>
-<td><strong>SSN Verification</strong></td>
-<td>Yes (via Stripe Connect onboarding)</td>
-<td>Limited (PayPal verifies account, not exposed to platform)</td>
-<td>Limited (PayPal verifies internally only)</td>
-</tr>
-
-<tr>
-<td><strong>Can Accept ACH Only (Disable Cards)</strong></td>
-<td>Yes (Full payment method control)</td>
 <td>No</td>
 <td>No</td>
 </tr>
 
 <tr>
-<td><strong>Escrow-Style Hold Until Gig Completion</strong></td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
+<td><strong>SSN / Identity Verification</strong></td>
+<td>Yes (KYC built-in)</td>
+<td>Limited</td>
+<td>Limited</td>
+<td>Yes (KYC module)</td>
 </tr>
 
 <tr>
-<td><strong>Automatic Tax Reporting Dashboard</strong></td>
+<td><strong>Disable Credit Cards (ACH-only)</strong></td>
 <td>Yes</td>
 <td>No</td>
 <td>No</td>
+<td>Yes (configurable)</td>
 </tr>
 
 <tr>
-<td><strong>Full API Control Over Payment Lifecycle</strong></td>
-<td>High</td>
-<td>Medium</td>
+<td><strong>Escrow-Style Hold</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes (manual)</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td><strong>Compliance Burden</strong></td>
 <td>Low</td>
-</tr>
-
-<tr>
-<td><strong>Can Payments be manually stopped</strong></td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>High</td>
 </tr>
 
 </table>
@@ -310,19 +237,19 @@
 <h2>Executive Summary</h2>
 
 <ul>
-<li><strong>Lowest Cost:</strong> Stripe ACH (0.8% capped at $5)</li>
-<li><strong>Best Control:</strong> Stripe Connect</li>
-<li><strong>Built-in Tax Compliance:</strong> Stripe (W-9 + 1099)</li>
-<li><strong>Higher Cost Option:</strong> PayPal (3.49% + $0.49)</li>
-<li><strong>Most Flexible Marketplace Model and the recommendation:</strong> Stripe</li>
+<li><strong>Lowest ACH Cost:</strong> Adyen ($0.40 flat)</li>
+<li><strong>Best Tax Automation:</strong> Stripe</li>
+<li><strong>Most Predictable Card Pricing:</strong> Stripe</li>
+<li><strong>Most Enterprise Control:</strong> Adyen</li>
+<li><strong>Highest Overall Cost:</strong> PayPal models</li>
+<li><b>Recommendation:</b> Stripe</li>
 </ul>
 
 <p class="note">
-All fees shown based on standard US pricing. Actual negotiated rates may vary.
+Adyen card fees vary by interchange category. Stripe uses blended pricing. ACH comparison assumes U.S. domestic transactions.
 </p>
 
 </div>
-
 
 </body>
 </html>
