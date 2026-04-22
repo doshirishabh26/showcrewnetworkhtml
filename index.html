@@ -1,255 +1,687 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ShowCrewNetwork Payment Model Comparison</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Show Crew Network — Rippling Integration Plan</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background-color: #f5f7fa;
+    :root {
+      --brand: #1a1a2e;
+      --accent: #6C3AE0;
+      --accent-light: #ede7f6;
+      --blue: #0f3460;
+      --blue-light: #e3f2fd;
+      --green: #16a085;
+      --green-light: #e8f8f5;
+      --orange: #e67e22;
+      --orange-light: #fef9e7;
+      --gray-50: #fafafa;
+      --gray-100: #f5f5f5;
+      --gray-200: #eeeeee;
+      --gray-300: #e0e0e0;
+      --gray-500: #9e9e9e;
+      --gray-700: #616161;
+      --gray-900: #212121;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
-    h1, h2 {
-      color: #1a2b49;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 40px;
-      background-color: white;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
-      text-align: left;
-    }
-    th {
-      background-color: #1a2b49;
-      color: white;
-    }
-    .highlight {
-      background-color: #e8f2ff;
-      font-weight: bold;
-    }
-    .section {
-      margin-bottom: 60px;
-    }
-    .note {
-      font-size: 14px;
-      color: #555;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; color: var(--gray-900); background: var(--gray-50); line-height: 1.6; }
+
+    .hero { background: linear-gradient(135deg, var(--brand) 0%, #2d1b69 50%, var(--accent) 100%); color: white; padding: 60px 40px; text-align: center; }
+    .hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 12px; }
+    .hero .subtitle { font-size: 1.15rem; opacity: 0.85; max-width: 720px; margin: 0 auto 24px; }
+    .hero .badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+    .hero .date { margin-top: 16px; font-size: 0.9rem; opacity: 0.6; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 48px 0; }
+    section + section { border-top: 1px solid var(--gray-200); }
+
+    h2 { font-size: 1.6rem; font-weight: 700; color: var(--brand); margin-bottom: 8px; }
+    h2 .num { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--accent); color: white; border-radius: 50%; font-size: 0.95rem; margin-right: 12px; vertical-align: middle; }
+    .section-desc { color: var(--gray-700); font-size: 1rem; margin-bottom: 28px; max-width: 800px; }
+    h3 { font-size: 1.15rem; font-weight: 600; color: var(--blue); margin: 24px 0 12px; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
+    .card { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border-left: 4px solid var(--accent); }
+    .card.blue { border-left-color: var(--blue); }
+    .card.green { border-left-color: var(--green); }
+    .card.orange { border-left-color: var(--orange); }
+    .card.stripe { border-left-color: #635bff; }
+    .card h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
+    .card p, .card li { font-size: 0.92rem; color: var(--gray-700); line-height: 1.55; }
+    .card ul { padding-left: 18px; margin-top: 8px; }
+    .card li { margin-bottom: 4px; }
+
+    .table-wrap { overflow-x: auto; margin: 20px 0; border-radius: var(--radius); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; background: white; font-size: 0.92rem; }
+    thead { background: var(--brand); color: white; }
+    th { padding: 14px 18px; text-align: left; font-weight: 600; white-space: nowrap; }
+    td { padding: 12px 18px; border-bottom: 1px solid var(--gray-200); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--gray-100); }
+
+    .flow { display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 0; margin: 28px 0; padding: 32px 20px; background: white; border-radius: var(--radius); box-shadow: var(--shadow); }
+    .flow-box { border-radius: 10px; padding: 16px 20px; text-align: center; min-width: 130px; display: flex; flex-direction: column; justify-content: center; }
+    .flow-box.company { background: #e3f2fd; border: 2px solid #1565c0; }
+    .flow-box.stripe { background: #ede7f6; border: 2px solid #635bff; }
+    .flow-box.scn { background: #fce4ec; border: 2px solid #e94560; }
+    .flow-box.rippling { background: #fff3e0; border: 2px solid #e67e22; }
+    .flow-box.crew { background: var(--green-light); border: 2px solid var(--green); }
+    .flow-box .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); margin-bottom: 4px; }
+    .flow-box .name { font-size: 0.95rem; font-weight: 700; }
+    .flow-box .detail { font-size: 0.78rem; color: var(--gray-700); margin-top: 4px; }
+    .flow-arrow { font-size: 1.5rem; color: var(--gray-500); padding: 0 10px; display: flex; align-items: center; }
+
+    .callout { background: var(--orange-light); border-left: 4px solid var(--orange); border-radius: 0 var(--radius) var(--radius) 0; padding: 18px 24px; margin: 20px 0; }
+    .callout.info { background: var(--blue-light); border-left-color: var(--blue); }
+    .callout.purple { background: var(--accent-light); border-left-color: var(--accent); }
+    .callout.danger { background: #fde8e8; border-left-color: #e53e3e; }
+    .callout strong { display: block; margin-bottom: 4px; }
+    .callout p { font-size: 0.92rem; color: var(--gray-700); }
+
+    .tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; }
+    .tag.w2 { background: var(--blue-light); color: var(--blue); }
+    .tag.c1099 { background: var(--green-light); color: var(--green); }
+    .tag.rippling { background: #fff3e0; color: #e65100; }
+    .tag.stripe { background: #ede7f6; color: #4527a0; }
+    .tag.removed { background: #fde8e8; color: #c0392b; text-decoration: line-through; }
+    .tag.kept { background: #e8f8f5; color: #16a085; }
+    .tag.new { background: #fff3e0; color: #e65100; }
+
+    .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+    .cost-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .cost-card .header { padding: 16px 20px; font-weight: 700; font-size: 1rem; color: white; }
+    .cost-card.w2 .header { background: var(--blue); }
+    .cost-card.c1099 .header { background: var(--green); }
+    .cost-card .body { padding: 16px 20px; }
+    .cost-card .line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.92rem; border-bottom: 1px solid var(--gray-200); }
+    .cost-card .line:last-child { border-bottom: none; }
+    .cost-card .line.total { font-weight: 700; font-size: 1rem; border-top: 2px solid var(--gray-300); margin-top: 4px; padding-top: 10px; }
+
+    .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 24px 0; }
+    .split-section > div { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+    .split-section h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--gray-200); }
+    .split-section .w2-side h4 { color: var(--blue); border-bottom-color: var(--blue); }
+    .split-section .c1099-side h4 { color: var(--green); border-bottom-color: var(--green); }
+    .split-section ol { padding-left: 20px; }
+    .split-section li { font-size: 0.9rem; color: var(--gray-700); margin-bottom: 6px; line-height: 1.5; }
+
+    .fee-box { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; margin: 20px 0; }
+    .fee-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--gray-200); }
+    .fee-row:last-child { border-bottom: none; }
+    .fee-row .fee-label { flex: 1; font-size: 0.95rem; font-weight: 500; }
+    .fee-row .fee-value { font-size: 0.95rem; font-weight: 700; color: var(--accent); min-width: 160px; text-align: right; }
+    .fee-row .fee-note { font-size: 0.82rem; color: var(--gray-500); margin-top: 2px; }
+
+    .footer { background: var(--brand); color: rgba(255,255,255,0.6); text-align: center; padding: 28px 20px; font-size: 0.85rem; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.6rem; }
+      .card-grid, .cost-grid, .split-section { grid-template-columns: 1fr; }
+      .flow { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); padding: 6px 0; }
     }
   </style>
 </head>
 <body>
 
-<h1>ShowCrewNetwork – Payment Infrastructure Comparison</h1>
-<h2>Scenario: $1,000 Payment from Hiring Company to Crew</h2>
+  <!-- HERO -->
+  <div class="hero">
+    <h1>SCN + Rippling Integration Plan</h1>
+    <p class="subtitle">Unified workforce payments via <strong>Rippling</strong> (W-2 payroll + 1099 contractor payments) and <strong>Stripe</strong> (company payment collection). Single platform for all crew.</p>
+    <span class="badge">INTERNAL — LEADERSHIP REVIEW</span>
+    <p class="date">April 2026</p>
+  </div>
 
-<div class="section">
-<h2>1️⃣ Stripe Connect Marketplace Model</h2>
+  <!-- 1: RIPPLING FEES -->
+  <section>
+    <div class="container">
+      <h2><span class="num">1</span> Rippling Fees</h2>
+      <p class="section-desc">Rippling pricing is per-employee/month and module-based. Quote-based — estimates below from public data and industry benchmarks.</p>
 
-<table>
-<tr>
-<th>Item</th>
-<th>Credit Card</th>
-<th>ACH Debit</th>
-</tr>
-<tr>
-<td>Processing Fee</td>
-<td>2.9% + $0.30 = $29.30</td>
-<td>0.8% (capped at $5) = $5.00</td>
-</tr>
-<tr>
-<td>Payout Fee (US)</td>
-<td>$0</td>
-<td>$0</td>
-</tr>
-<tr>
-<td>Dispute / Return Fee</td>
-<td>~$15 per dispute</td>
-<td>~$4–$5 ACH return</td>
-</tr>
-<tr class="highlight">
-<td>Total Platform Cost</td>
-<td>$29.30</td>
-<td>$5.00</td>
-</tr>
-</table>
-</div>
+      <div class="fee-box">
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">Rippling Platform (required base)</div>
+            <div class="fee-note">Workforce directory, onboarding/offboarding, analytics, mobile app</div>
+          </div>
+          <div class="fee-value">~$8/person/month</div>
+        </div>
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">US Payroll Module (W-2 employees)</div>
+            <div class="fee-note">Tax calculation, withholding, filing, W-2 generation, direct deposit, unlimited off-cycle runs</div>
+          </div>
+          <div class="fee-value">~$8/employee/month</div>
+        </div>
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">Contractor Management (1099)</div>
+            <div class="fee-note">Invoice management, 1099-NEC filing, contractor payments, KYC</div>
+          </div>
+          <div class="fee-value">~$5-8/contractor/month</div>
+        </div>
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">Time & Attendance (optional)</div>
+            <div class="fee-note">Clock-in/out, overtime policies, integrates with payroll</div>
+          </div>
+          <div class="fee-value">~$8/person/month</div>
+        </div>
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">Off-Cycle Pay Runs</div>
+            <div class="fee-note">Per-event payroll runs after each gig — critical for SCN's model</div>
+          </div>
+          <div class="fee-value" style="color: var(--green);">Unlimited, $0 extra</div>
+        </div>
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">Workers' Comp Administration</div>
+            <div class="fee-note">Pay-as-you-go workers' comp, automated premium calculation</div>
+          </div>
+          <div class="fee-value">Included with payroll</div>
+        </div>
+      </div>
 
-<div class="section">
-<h2>2️⃣ PayPal Marketplace (Commerce Platform)</h2>
+      <div class="callout purple">
+        <strong>Estimated total: ~$16-20/active worker/month (W-2) or ~$13-16/month (1099)</strong>
+        <p>Rippling is quote-based — these are estimates. Request a custom quote. Key advantage: <strong>unlimited off-cycle pay runs at no extra cost</strong>, which is critical since SCN pays per-event, not on a regular schedule.</p>
+      </div>
 
-<table>
-<tr>
-<th>Item</th>
-<th>PayPal (Card or Bank)</th>
-</tr>
-<tr>
-<td>Processing Fee</td>
-<td>3.49% + $0.49 = $35.39</td>
-</tr>
-<tr>
-<td>Payout Fee</td>
-<td>$0 (internal split)</td>
-</tr>
-<tr>
-<td>Dispute Handling</td>
-<td>PayPal Resolution Center</td>
-</tr>
-<tr class="highlight">
-<td>Total Platform Cost</td>
-<td>$35.39</td>
-</tr>
-</table>
-</div>
+      <h3>Stripe Fees (Unchanged — Company Side Only)</h3>
+      <div class="fee-box">
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">Card Payments</div>
+            <div class="fee-note">Company pays for crew via credit/debit card</div>
+          </div>
+          <div class="fee-value">2.9% + $0.30</div>
+        </div>
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">ACH Payments</div>
+            <div class="fee-note">Company pays via bank transfer (batch charges)</div>
+          </div>
+          <div class="fee-value">0.8% (max $5)</div>
+        </div>
+        <div class="fee-row">
+          <div>
+            <div class="fee-label">Stripe Connect</div>
+            <div class="fee-note">Previously used for crew payouts</div>
+          </div>
+          <div class="fee-value" style="color: #c0392b; text-decoration: line-through;">Removed</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="section">
-<h2>3️⃣ PayPal Manual Escrow Model (3 Account Model)</h2>
+  <!-- 2: MONEY FLOWS -->
+  <section>
+    <div class="container">
+      <h2><span class="num">2</span> Payment Flows</h2>
+      <p class="section-desc">Stripe collects from companies. Rippling pays crew. SCN sits in the middle as the platform and employer of record.</p>
 
-<table>
-<tr>
-<th>Item</th>
-<th>PayPal Manual Escrow</th>
-</tr>
-<tr>
-<td>Processing Fee</td>
-<td>3.49% + $0.49 = $35.39</td>
-</tr>
-<tr>
-<td>Payout Fee</td>
-<td>$0.25</td>
-</tr>
-<tr class="highlight">
-<td>Total Platform Cost</td>
-<td>$35.64</td>
-</tr>
-</table>
-</div>
+      <h3>Company → SCN (Payment Collection via Stripe)</h3>
+      <div class="flow">
+        <div class="flow-box company">
+          <div class="label">Company</div>
+          <div class="name">Hiring Client</div>
+          <div class="detail">Creates job, hires crew</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box stripe">
+          <div class="label">Stripe</div>
+          <div class="name">Card / ACH</div>
+          <div class="detail">PaymentIntent charge</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box scn">
+          <div class="label">SCN</div>
+          <div class="name">Escrow</div>
+          <div class="detail">Platform fee deducted</div>
+        </div>
+      </div>
+      <div class="callout info">
+        <strong>No change from today.</strong>
+        <p>Companies are charged via Stripe when crew are hired (card immediate for &lt;7 days, ACH batch for &gt;7 days). Escrow holds funds until job completion. This flow is identical for W-2 and 1099 jobs.</p>
+      </div>
 
-<div class="section">
-<h2>4️⃣ Adyen for Platforms</h2>
+      <h3>SCN → Crew (Payouts via Rippling)</h3>
+      <div class="split-section">
+        <div class="c1099-side">
+          <h4>1099 Contractor Payment</h4>
+          <ol>
+            <li>Job completes, hours confirmed</li>
+            <li>7-day hold (existing escrow policy)</li>
+            <li>SCN triggers <strong>contractor payment</strong> in Rippling</li>
+            <li>Rippling sends <strong>full amount</strong> via direct deposit — no tax withholding</li>
+            <li>Contractor receives pay in 2-3 business days</li>
+            <li>Year-end: Rippling auto-generates <strong>1099-NEC</strong> (if ≥$600)</li>
+          </ol>
+        </div>
+        <div class="w2-side">
+          <h4>W-2 Employee Payroll</h4>
+          <ol>
+            <li>Job completes, hours confirmed</li>
+            <li>7-day hold (existing escrow policy)</li>
+            <li>SCN runs <strong>off-cycle payroll</strong> in Rippling for that crew member</li>
+            <li>Rippling calculates &amp; withholds: federal income tax, state income tax, Social Security (6.2%), Medicare (1.45%)</li>
+            <li>Crew receives <strong>net pay</strong> via direct deposit</li>
+            <li>Rippling deposits employer taxes (FICA, FUTA, SUTA) to IRS/state agencies</li>
+            <li>Year-end: Rippling auto-generates <strong>W-2</strong></li>
+          </ol>
+        </div>
+      </div>
 
-<table>
-<tr>
-<th>Item</th>
-<th>Credit Card (Interchange++)</th>
-<th>ACH Direct Debit (US)</th>
-</tr>
-<tr>
-<td>Processing Structure</td>
-<td>Interchange + 0.60% + $0.13</td>
-<td>$0.13 + $0.27</td>
-</tr>
-<tr>0
-<td>~$24–$30 (depends on card type)</td>
-<td>$0.40 flat</td>
-</tr>
-<tr>
-<td>Payout Fee (US)</td>
-<td>$0</td>
-<td>$0</td>
-</tr>
-<tr>
-<td>Dispute / Return Fee</td>
-<td>~$15–$25 chargeback</td>
-<td>~$5–$10 ACH return</td>
-</tr>
-<tr class="highlight">
-<td>Total Platform Cost (Example)</td>
-<td>~$24–$30</td>
-<td>$0.40</td>
-</tr>
-</table>
+      <h3>Full End-to-End Flow</h3>
+      <div class="flow">
+        <div class="flow-box company">
+          <div class="label">Company</div>
+          <div class="name">Client</div>
+          <div class="detail">Pays for crew</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box stripe">
+          <div class="label">Collect</div>
+          <div class="name">Stripe</div>
+          <div class="detail">Card/ACH</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box scn">
+          <div class="label">Platform</div>
+          <div class="name">SCN</div>
+          <div class="detail">Escrow + 5% fee</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box rippling">
+          <div class="label">Pay Crew</div>
+          <div class="name">Rippling</div>
+          <div class="detail">Payroll or contractor pmt</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box crew">
+          <div class="label">Crew</div>
+          <div class="name">Direct Deposit</div>
+          <div class="detail">Bank account</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<p><strong>Notes:</strong></p>
-<ul>
-<li>Card pricing varies based on interchange (consumer vs corporate cards)</li>
-<li>ACH is flat $0.40 per transaction</li>
-<li>No built-in W-9 collection</li>
-<li>No automatic 1099 issuance</li>
-</ul>
-</div>
+  <!-- 3: COST TO COMPANY -->
+  <section>
+    <div class="container">
+      <h2><span class="num">3</span> Cost Impact to Companies</h2>
+      <p class="section-desc">W-2 jobs cost ~13-15% more due to employer payroll taxes. Displayed transparently at job creation.</p>
 
-<div class="section">
-<h2>Feature Comparison – Compliance & Payment Control</h2>
+      <div class="cost-grid">
+        <div class="cost-card c1099">
+          <div class="header">1099 Contractor — $300/day</div>
+          <div class="body">
+            <div class="line"><span>Crew pay</span><span>$300.00</span></div>
+            <div class="line"><span>Employer FICA</span><span>—</span></div>
+            <div class="line"><span>FUTA / SUTA</span><span>—</span></div>
+            <div class="line"><span>Workers' comp</span><span>—</span></div>
+            <div class="line"><span>SCN platform fee (5%)</span><span>$15.00</span></div>
+            <div class="line"><span>Stripe processing</span><span>~$2.50</span></div>
+            <div class="line total"><span>Company Pays</span><span>$317.50</span></div>
+            <div class="line" style="color:var(--green);font-weight:600"><span>Crew Receives</span><span>$300.00</span></div>
+          </div>
+        </div>
+        <div class="cost-card w2">
+          <div class="header">W-2 Employee — $300/day</div>
+          <div class="body">
+            <div class="line"><span>Crew pay (gross)</span><span>$300.00</span></div>
+            <div class="line"><span>Employer FICA (7.65%)</span><span>$22.95</span></div>
+            <div class="line"><span>FUTA (~0.6%)</span><span>$1.80</span></div>
+            <div class="line"><span>SUTA (~3%)</span><span>$9.00</span></div>
+            <div class="line"><span>Workers' comp (~2%)</span><span>$6.00</span></div>
+            <div class="line"><span>SCN platform fee (5%)</span><span>$15.00</span></div>
+            <div class="line"><span>Stripe processing</span><span>~$2.50</span></div>
+            <div class="line total"><span>Company Pays</span><span>$357.25</span></div>
+            <div class="line" style="color:var(--blue);font-weight:600"><span>Crew Receives (net after tax)</span><span>~$225.00</span></div>
+          </div>
+        </div>
+      </div>
 
-<table>
-<tr>
-<th>Feature</th>
-<th>Stripe Connect</th>
-<th>PayPal Marketplace</th>
-<th>PayPal Manual Escrow</th>
-<th>Adyen for Platforms</th>
-</tr>
+      <div class="callout">
+        <strong>Crew's agreed rate stays the same ($300).</strong>
+        <p>For W-2: Rippling withholds ~$75 in employee-side taxes (income tax + employee FICA). Crew gets ~$225 net, but the withholding goes toward their tax liability — not lost. Employer taxes ($39.75) are additional costs the company bears.</p>
+      </div>
+    </div>
+  </section>
 
-<tr>
-<td><strong>W-9 Collection</strong></td>
-<td>Yes</td>
-<td>No</td>
-<td>No</td>
-<td>No</td>
-</tr>
+  <!-- 4: WHAT CHANGES IN THE SYSTEM -->
+  <section>
+    <div class="container">
+      <h2><span class="num">4</span> Changes to SCN's System</h2>
+      <p class="section-desc">What gets added, what gets replaced, and what stays the same.</p>
 
-<tr>
-<td><strong>1099 Issuance</strong></td>
-<td>Yes (automatic)</td>
-<td>No</td>
-<td>No</td>
-<td>No</td>
-</tr>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Component</th><th>Current</th><th>After Rippling</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Charge companies</strong></td><td>Stripe card/ACH</td><td>Stripe card/ACH</td><td><span class="tag kept">No Change</span></td></tr>
+            <tr><td><strong>Pay 1099 crew</strong></td><td>Stripe Connect Transfer</td><td>Rippling contractor payment</td><td><span class="tag rippling">Replace</span></td></tr>
+            <tr><td><strong>Pay W-2 crew</strong></td><td>N/A</td><td>Rippling off-cycle payroll</td><td><span class="tag new">New</span></td></tr>
+            <tr><td><strong>Crew KYC</strong></td><td>Stripe Identity (gov ID scan)</td><td>Stripe Identity + Rippling KYC</td><td><span class="tag kept">Enhanced</span></td></tr>
+            <tr><td><strong>Crew onboarding</strong></td><td>Stripe Connect Express</td><td>Rippling onboarding (SSN, bank, W-4/I-9 for W-2)</td><td><span class="tag rippling">Replace</span></td></tr>
+            <tr><td><strong>1099-NEC filing</strong></td><td>Stripe (auto)</td><td>Rippling (auto)</td><td><span class="tag rippling">Replace</span></td></tr>
+            <tr><td><strong>W-2 filing</strong></td><td>N/A</td><td>Rippling (auto)</td><td><span class="tag new">New</span></td></tr>
+            <tr><td><strong>Tax withholding</strong></td><td>N/A</td><td>Rippling (all 50 states, automatic)</td><td><span class="tag new">New</span></td></tr>
+            <tr><td><strong>Workers' comp</strong></td><td>N/A</td><td>Rippling (pay-as-you-go)</td><td><span class="tag new">New</span></td></tr>
+            <tr><td><strong>Job classification field</strong></td><td>N/A</td><td><code>workerClassification: 'w2' | '1099'</code> on Job</td><td><span class="tag new">New</span></td></tr>
+            <tr><td><strong>Crew classification</strong></td><td>All 1099</td><td><code>classification: 'w2' | '1099'</code> on CrewMember</td><td><span class="tag new">New</span></td></tr>
+            <tr><td><strong>Stripe Connect accounts</strong></td><td>Express per crew</td><td>Removed</td><td><span class="tag removed">Removed</span></td></tr>
+            <tr><td><strong>Escrow / commitment</strong></td><td>Stripe PaymentIntent</td><td>Stripe PaymentIntent</td><td><span class="tag kept">No Change</span></td></tr>
+            <tr><td><strong>Batch ACH from companies</strong></td><td>Stripe ACH</td><td>Stripe ACH</td><td><span class="tag kept">No Change</span></td></tr>
+            <tr><td><strong>Marketplace matching</strong></td><td>All crew see all jobs</td><td>W-2 crew see W-2 jobs, 1099 see 1099</td><td><span class="tag new">New</span></td></tr>
+          </tbody>
+        </table>
+      </div>
 
-<tr>
-<td><strong>SSN / Identity Verification</strong></td>
-<td>Yes (KYC built-in)</td>
-<td>Limited</td>
-<td>Limited</td>
-<td>Yes (KYC module)</td>
-</tr>
+      <h3>Backend Code Changes</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h4>libs/stripe.ts</h4>
+          <ul>
+            <li><span class="tag removed">Remove</span> <code>createConnectedAccount()</code></li>
+            <li><span class="tag removed">Remove</span> <code>createAccountLink()</code></li>
+            <li><span class="tag removed">Remove</span> <code>createTransfer()</code></li>
+            <li><span class="tag removed">Remove</span> <code>updateConnectedAccount()</code></li>
+            <li><span class="tag kept">Keep</span> All PaymentIntent/SetupIntent functions</li>
+          </ul>
+        </div>
+        <div class="card orange">
+          <h4>libs/rippling.ts (NEW)</h4>
+          <ul>
+            <li><span class="tag new">Add</span> <code>createEmployee()</code></li>
+            <li><span class="tag new">Add</span> <code>createContractor()</code></li>
+            <li><span class="tag new">Add</span> <code>runOffCyclePayroll()</code></li>
+            <li><span class="tag new">Add</span> <code>createContractorPayment()</code></li>
+            <li><span class="tag new">Add</span> <code>getOnboardingLink()</code></li>
+          </ul>
+        </div>
+        <div class="card blue">
+          <h4>libs/payoutStages.ts</h4>
+          <ul>
+            <li><span class="tag rippling">Replace</span> Stripe Transfer → Rippling payment</li>
+            <li>Branch on <code>job.workerClassification</code></li>
+            <li>1099 → <code>createContractorPayment()</code></li>
+            <li>W-2 → <code>runOffCyclePayroll()</code></li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h4>libs/types.ts</h4>
+          <ul>
+            <li><span class="tag new">Add</span> <code>workerClassification</code> to Job type</li>
+            <li><span class="tag new">Add</span> <code>classification</code> to CrewMember</li>
+            <li><span class="tag new">Add</span> <code>ripplingEmployeeId</code> to CrewMember</li>
+            <li><span class="tag new">Add</span> <code>w2Enabled</code> to Company</li>
+          </ul>
+        </div>
+      </div>
 
-<tr>
-<td><strong>Disable Credit Cards (ACH-only)</strong></td>
-<td>Yes</td>
-<td>No</td>
-<td>No</td>
-<td>Yes (configurable)</td>
-</tr>
+      <h3>Frontend Changes</h3>
+      <div class="card-grid">
+        <div class="card stripe">
+          <h4>Company App — Job Creation</h4>
+          <ul>
+            <li>Add "Worker Type" toggle: <span class="tag w2">W-2</span> / <span class="tag c1099">1099</span></li>
+            <li>Show loaded cost breakdown for W-2 (employer taxes)</li>
+            <li>Only shown if <code>company.w2Enabled</code></li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h4>Crew App — Onboarding</h4>
+          <ul>
+            <li>Replace Stripe Connect Express with Rippling onboarding</li>
+            <li>Crew chooses classification at signup (locked after)</li>
+            <li>W-2 crew: Rippling collects W-4, I-9, SSN, bank</li>
+            <li>1099 crew: Rippling collects SSN, bank, tax info</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Crew App — Pay Stubs</h4>
+          <ul>
+            <li>W-2 crew: Show Rippling pay stubs (gross, taxes, net)</li>
+            <li>1099 crew: Show payment receipts from Rippling</li>
+            <li>Tax documents (W-2 / 1099-NEC) accessible in app</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<tr>
-<td><strong>Escrow-Style Hold</strong></td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes (manual)</td>
-<td>Yes</td>
-</tr>
+  <!-- 5: WHAT COMPANY HANDLES -->
+  <section>
+    <div class="container">
+      <h2><span class="num">5</span> What the Company (SCN) Handles</h2>
+      <p class="section-desc">As employer of record for W-2 crew, SCN has specific obligations. Rippling automates most of the mechanics.</p>
 
-<tr>
-<td><strong>Compliance Burden</strong></td>
-<td>Low</td>
-<td>Medium</td>
-<td>Medium</td>
-<td>High</td>
-</tr>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Responsibility</th><th>Who Does the Work</th><th>SCN's Action Required</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tax withholding calculation</td>
+              <td><strong>Rippling</strong> (automatic)</td>
+              <td>None — Rippling calculates per jurisdiction</td>
+            </tr>
+            <tr>
+              <td>Tax filing &amp; deposits (941, 940, state)</td>
+              <td><strong>Rippling</strong> (automatic)</td>
+              <td>None — Rippling files and deposits on time</td>
+            </tr>
+            <tr>
+              <td>W-2 &amp; 1099-NEC generation</td>
+              <td><strong>Rippling</strong> (automatic, year-end)</td>
+              <td>Review before distribution</td>
+            </tr>
+            <tr>
+              <td>State employer registration</td>
+              <td><strong>Rippling</strong> (automatic for new states)</td>
+              <td>Rippling auto-registers when crew work in new states</td>
+            </tr>
+            <tr>
+              <td>Workers' comp insurance</td>
+              <td><strong>Rippling</strong> (pay-as-you-go policy)</td>
+              <td>Initial setup — Rippling manages ongoing</td>
+            </tr>
+            <tr>
+              <td>I-9 work authorization</td>
+              <td><strong>Rippling</strong> (onboarding flow)</td>
+              <td>None — automated collection</td>
+            </tr>
+            <tr>
+              <td>New hire reporting</td>
+              <td><strong>Rippling</strong> (automatic)</td>
+              <td>None — Rippling files with state agencies</td>
+            </tr>
+            <tr>
+              <td>Wage &amp; hour compliance</td>
+              <td><strong>SCN</strong> (platform logic)</td>
+              <td>Ensure minimum wage &amp; overtime rules enforced per state</td>
+            </tr>
+            <tr>
+              <td>Employment agreements</td>
+              <td><strong>SCN</strong> (legal)</td>
+              <td>Draft per-diem/on-call employment agreement for W-2 crew</td>
+            </tr>
+            <tr>
+              <td>Contractor agreements</td>
+              <td><strong>SCN</strong> (legal)</td>
+              <td>Draft independent contractor agreement for 1099 crew</td>
+            </tr>
+            <tr>
+              <td>Unemployment claims</td>
+              <td><strong>SCN</strong> responds, <strong>Rippling</strong> provides records</td>
+              <td>Respond to claims; Rippling provides payroll records for defense</td>
+            </tr>
+            <tr>
+              <td>Run payroll</td>
+              <td><strong>SCN</strong> triggers via Rippling API/dashboard</td>
+              <td>SCN triggers off-cycle payroll after each job completes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-</table>
-</div>
+      <div class="callout info">
+        <strong>Rippling's advantage: Auto state registration</strong>
+        <p>When a W-2 crew member works in a new state, Rippling automatically applies for employer tax accounts in that state. This eliminates one of the biggest headaches of multi-state employment.</p>
+      </div>
 
-<div class="section">
-<h2>Executive Summary</h2>
+      <div class="callout danger">
+        <strong>Legal review required before launch</strong>
+        <p>(1) Per-diem employment agreement language, (2) impact on active lawsuit, (3) Terms of Service update, (4) workers' comp classification codes for event staffing industry.</p>
+      </div>
+    </div>
+  </section>
 
-<ul>
-<li><strong>Lowest ACH Cost:</strong> Adyen ($0.40 flat)</li>
-<li><strong>Best Tax Automation:</strong> Stripe</li>
-<li><strong>Most Predictable Card Pricing:</strong> Stripe</li>
-<li><strong>Most Enterprise Control:</strong> Adyen</li>
-<li><strong>Highest Overall Cost:</strong> PayPal models</li>
-<li><b>Recommendation:</b> Stripe</li>
-</ul>
+  <!-- 6: RIPPLING CAPABILITIES -->
+  <section>
+    <div class="container">
+      <h2><span class="num">6</span> Rippling Capabilities for SCN</h2>
+      <p class="section-desc">Key Rippling features that align with SCN's event staffing model.</p>
 
-<p class="note">
-Adyen card fees vary by interchange category. Stripe uses blended pricing. ACH comparison assumes U.S. domestic transactions.
-</p>
+      <div class="card-grid">
+        <div class="card">
+          <h4>Unlimited Off-Cycle Payroll</h4>
+          <p>Run payroll as often as needed — per event, per crew member — at <strong>no extra cost</strong>. SCN triggers a payroll run each time a job completes. No need to batch into biweekly cycles.</p>
+        </div>
+        <div class="card blue">
+          <h4>Custom Pay Types</h4>
+          <p>Support <strong>hourly</strong>, <strong>flat/day rate</strong>, and <strong>bonus</strong> pay types. No fixed salary required. Crew are paid per-event for exactly the hours/days worked.</p>
+        </div>
+        <div class="card green">
+          <h4>Automatic Tax Location Updates</h4>
+          <p>When crew work events in different states, Rippling auto-updates tax withholding based on work location. Critical for touring events.</p>
+        </div>
+        <div class="card orange">
+          <h4>REST API</h4>
+          <p>Rippling's API supports programmatic employee/contractor creation, payroll triggers, and data sync. SCN's backend can automate the full flow.</p>
+        </div>
+        <div class="card">
+          <h4>Zero-Pay Months</h4>
+          <p>W-2 crew with no gigs in a given month stay active in the HRIS with <strong>no payroll obligation</strong>. Rippling maintains their tax setup for when they next work.</p>
+        </div>
+        <div class="card blue">
+          <h4>Integrated Support</h4>
+          <p>4.8/5 on G2. Support team has visibility into HR + Payroll + IT setup simultaneously. Faster resolution than siloed systems.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-</div>
+  <!-- 7: CREW CHANGES -->
+  <section>
+    <div class="container">
+      <h2><span class="num">7</span> Crew Experience Changes</h2>
+
+      <div class="split-section">
+        <div class="c1099-side">
+          <h4>1099 Contractor Crew</h4>
+          <ol>
+            <li><strong>Sign up</strong> on SCN → choose "Independent Contractor"</li>
+            <li><strong>Identity verification</strong> via Stripe Identity (gov ID scan)</li>
+            <li><strong>Rippling onboarding:</strong> SSN, bank account, tax info</li>
+            <li><strong>Browse</strong> 1099 jobs on marketplace</li>
+            <li><strong>Apply / get hired</strong> — same flow as today</li>
+            <li><strong>Complete job</strong> → hours confirmed</li>
+            <li><strong>Get paid</strong> → full amount via direct deposit (2-3 days)</li>
+            <li><strong>Year-end:</strong> 1099-NEC available in app (from Rippling)</li>
+          </ol>
+        </div>
+        <div class="w2-side">
+          <h4>W-2 Employee Crew</h4>
+          <ol>
+            <li><strong>Sign up</strong> on SCN → choose "W-2 Employee"</li>
+            <li><strong>Identity verification</strong> via Stripe Identity (gov ID scan)</li>
+            <li><strong>Rippling onboarding:</strong> SSN, bank account, <strong>W-4, I-9</strong></li>
+            <li><strong>Browse</strong> W-2 jobs on marketplace</li>
+            <li><strong>Apply / get hired</strong> — same flow</li>
+            <li><strong>Complete job</strong> → hours confirmed</li>
+            <li><strong>Get paid</strong> → net pay via direct deposit (taxes withheld)</li>
+            <li><strong>Year-end:</strong> W-2 available in app (from Rippling)</li>
+            <li><strong>Pay stubs:</strong> Visible per event (gross, deductions, net)</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Crew picks classification once at onboarding (locked after).</strong>
+        <p>No per-job switching. A crew member is either W-2 or 1099 for all jobs. If they want to switch, they contact support. This simplifies Rippling's worker setup and avoids tax complexity.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8: COMPARISON WITH CURRENT -->
+  <section>
+    <div class="container">
+      <h2><span class="num">8</span> Before vs. After</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Area</th><th>Before (Stripe Connect Only)</th><th>After (Stripe + Rippling)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Worker types supported</td><td>1099 only</td><td><strong>1099 + W-2</strong></td></tr>
+            <tr><td>Collect from companies</td><td>Stripe</td><td>Stripe (unchanged)</td></tr>
+            <tr><td>Pay crew</td><td>Stripe Transfer</td><td><strong>Rippling</strong></td></tr>
+            <tr><td>Tax withholding</td><td>None</td><td><strong>Automatic (Rippling)</strong></td></tr>
+            <tr><td>Tax filing</td><td>Stripe 1099-NEC only</td><td><strong>1099-NEC + W-2 (Rippling)</strong></td></tr>
+            <tr><td>Crew onboarding</td><td>Stripe Identity + Connect Express</td><td><strong>Stripe Identity + Rippling</strong></td></tr>
+            <tr><td>Workers' comp</td><td>Not available</td><td><strong>Pay-as-you-go (Rippling)</strong></td></tr>
+            <tr><td>Multi-state compliance</td><td>Not needed</td><td><strong>Auto-registration (Rippling)</strong></td></tr>
+            <tr><td>Misclassification risk</td><td>High (1099 only)</td><td><strong>Mitigated (W-2 option available)</strong></td></tr>
+            <tr><td>Off-cycle pay runs</td><td>Stripe Transfer (anytime)</td><td><strong>Rippling (unlimited, no extra cost)</strong></td></tr>
+            <tr><td>Crew pay stubs</td><td>Stripe Express dashboard</td><td><strong>Rippling portal / embedded in SCN</strong></td></tr>
+            <tr><td>Platform fees</td><td>Stripe Connect: free</td><td><strong>Rippling: ~$13-20/worker/month</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9: SUMMARY -->
+  <section style="background: var(--gray-100);">
+    <div class="container">
+      <h2><span class="num">9</span> Decision Summary</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Decision</th><th>Choice</th></tr></thead>
+          <tbody>
+            <tr><td>Payroll &amp; contractor payment provider</td><td><strong>Rippling</strong> (Platform + Payroll + Contractor modules)</td></tr>
+            <tr><td>Payment collection from companies</td><td><strong>Stripe</strong> (card + ACH, unchanged)</td></tr>
+            <tr><td>Employer of Record for W-2</td><td><strong>SCN</strong></td></tr>
+            <tr><td>Crew classification</td><td>Choose once at onboarding (W-2 or 1099)</td></tr>
+            <tr><td>Stripe Connect</td><td><strong>Remove</strong> — replaced by Rippling payments</td></tr>
+            <tr><td>Workers' comp</td><td>Via Rippling (pay-as-you-go)</td></tr>
+            <tr><td>State tax registration</td><td>Rippling (automatic)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="margin-top:32px">Next Steps</h3>
+      <div class="card-grid">
+        <div class="card"><h4>1. Legal Review</h4><p>Counsel reviews EOR implications, per-diem employment agreement, and impact on active lawsuit.</p></div>
+        <div class="card orange"><h4>2. Rippling Quote</h4><p>Request custom pricing from Rippling sales for SCN's model (~200 per-diem workers, event-based payroll).</p></div>
+        <div class="card green"><h4>3. API Access</h4><p>Get Rippling developer sandbox access. Test employee creation, off-cycle payroll, and contractor payments.</p></div>
+        <div class="card blue"><h4>4. Engineering</h4><p>Replace Stripe Connect with Rippling integration. Add classification fields. Update onboarding and payout flows.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">Show Crew Network — Internal Document — April 2026<br>Rippling Integration Plan — Prepared for leadership review. Not for external distribution.</div>
 
 </body>
 </html>
