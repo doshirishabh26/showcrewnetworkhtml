@@ -917,6 +917,23 @@
         <div class="caption">Time & Attendance — 6 calls selected for Rishabh Doshi. Blue overlay shows bulk actions: Fill Times, Fill Check-in, No-Show, Deselect All. Matches the call sheet selection UI pattern.</div>
       </div>
     </div>
+
+    <h3>Google Calendar — Non-Blocking Events</h3>
+    <div class="detail-box green-box">
+      <strong>What's new:</strong> Crew members who sync their Google Calendar can now have <strong>non-blocking events</strong>. Events marked as "free" (transparent) in Google Calendar show up on the SCN calendar with a <strong>"Won't block availability"</strong> chip — meaning the matching engine won't treat them as conflicts when companies are looking for available crew.
+      <ul>
+        <li>Google Calendar events with <code>transparency: transparent</code> or <code>eventType: focusTime/outOfOffice</code> are auto-detected</li>
+        <li>Non-blocking events render with a lighter style so crew can visually distinguish them</li>
+        <li>The popover shows "Google Calendar" source + "Won't block availability" tag</li>
+        <li>Crew's availability stays open for booking during these times</li>
+      </ul>
+    </div>
+    <div class="screenshot-row">
+      <div class="screenshot">
+        <img src="photos/ShowCrewCalendar-transparentevent-nonblocking.png" alt="Google Calendar non-blocking event">
+        <div class="caption">Crew Calendar — Google Calendar event "hello hi with me" shown with "Won't block availability" chip. Event synced from Google Calendar, rendered in lighter style. Crew remains available for SCN jobs during this time.</div>
+      </div>
+    </div>
   </section>
 </div>
 
