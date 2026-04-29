@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>29 April 2026 — Show Crew Network Demo</title>
+  <style>
+    :root {
+      --brand: #1a1a2e;
+      --accent: #6C3AE0;
+      --accent-light: #ede7f6;
+      --blue: #0f3460;
+      --blue-light: #e3f2fd;
+      --green: #16a085;
+      --green-light: #e0f7ef;
+      --orange: #e67e22;
+      --orange-light: #fef9e7;
+      --red: #c0392b;
+      --red-light: #fdecea;
+      --gray-50: #fafafa;
+      --gray-100: #f5f5f5;
+      --gray-200: #eeeeee;
+      --gray-300: #e0e0e0;
+      --gray-500: #9e9e9e;
+      --gray-700: #616161;
+      --gray-900: #212121;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; color: var(--gray-900); background: var(--gray-50); line-height: 1.6; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--brand) 0%, #2d1b69 50%, var(--accent) 100%);
+      color: white; padding: 60px 40px; text-align: center;
+    }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .hero .subtitle { font-size: 1.2rem; opacity: 0.85; max-width: 700px; margin: 0 auto 20px; }
+    .hero .date-badge {
+      display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: white; padding: 8px 24px; border-radius: 24px; font-size: 0.95rem; font-weight: 600;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 48px 0; }
+    section + section { border-top: 1px solid var(--gray-200); }
+
+    /* ── Typography ── */
+    h2 { font-size: 1.6rem; font-weight: 700; color: var(--brand); margin-bottom: 8px; }
+    h2 .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; background: var(--accent); color: white;
+      border-radius: 50%; font-size: 0.95rem; margin-right: 12px; vertical-align: middle;
+    }
+    .section-desc { color: var(--gray-700); font-size: 1rem; margin-bottom: 28px; max-width: 800px; }
+    h3 { font-size: 1.15rem; font-weight: 600; color: var(--blue); margin: 24px 0 12px; }
+
+    /* ── Flow Scenario Cards ── */
+    .scenario {
+      background: white; border-radius: var(--radius); padding: 28px 32px;
+      box-shadow: var(--shadow); margin-bottom: 32px; position: relative; overflow: hidden;
+    }
+    .scenario::before {
+      content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 5px;
+    }
+    .scenario.happy::before { background: var(--green); }
+    .scenario.retry::before { background: var(--orange); }
+    .scenario.card-immediate::before { background: var(--blue); }
+    .scenario.escalation::before { background: var(--red); }
+
+    .scenario-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .scenario-icon {
+      width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+    }
+    .happy .scenario-icon { background: var(--green-light); }
+    .retry .scenario-icon { background: var(--orange-light); }
+    .card-immediate .scenario-icon { background: var(--blue-light); }
+    .escalation .scenario-icon { background: var(--red-light); }
+
+    .scenario-title { font-size: 1.25rem; font-weight: 700; }
+    .scenario-subtitle { font-size: 0.85rem; color: var(--gray-700); margin-top: 2px; }
+
+    /* ── Flow Timeline ── */
+    .flow {
+      display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0;
+      margin: 20px 0; position: relative;
+    }
+    .flow-step {
+      flex: 0 0 auto; text-align: center; position: relative; padding: 0 4px;
+    }
+    .flow-step .node {
+      width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; margin: 0 auto 8px; font-size: 1.2rem;
+      border: 2px solid var(--gray-300); background: white; position: relative; z-index: 1;
+    }
+    .flow-step.success .node { border-color: var(--green); background: var(--green-light); }
+    .flow-step.fail .node { border-color: var(--red); background: var(--red-light); }
+    .flow-step.pending .node { border-color: var(--orange); background: var(--orange-light); }
+    .flow-step.info .node { border-color: var(--blue); background: var(--blue-light); }
+    .flow-step.card .node { border-color: var(--accent); background: var(--accent-light); }
+
+    .flow-step .label {
+      font-size: 0.7rem; font-weight: 600; color: var(--gray-700);
+      max-width: 90px; line-height: 1.3;
+    }
+    .flow-step .sublabel {
+      font-size: 0.6rem; color: var(--gray-500); margin-top: 2px;
+    }
+    .flow-arrow {
+      display: flex; align-items: center; padding-top: 12px; color: var(--gray-500); font-size: 1.2rem;
+      flex: 0 0 auto;
+    }
+    .flow-arrow.fail-arrow { color: var(--red); }
+    .flow-arrow.retry-arrow { color: var(--orange); }
+
+    /* ── Detail Box ── */
+    .detail-box {
+      background: var(--gray-100); border-radius: 8px; padding: 16px 20px;
+      margin: 16px 0; font-size: 0.88rem;
+    }
+    .detail-box.green-box { background: var(--green-light); border-left: 3px solid var(--green); }
+    .detail-box.orange-box { background: var(--orange-light); border-left: 3px solid var(--orange); }
+    .detail-box.blue-box { background: var(--blue-light); border-left: 3px solid var(--blue); }
+    .detail-box.red-box { background: var(--red-light); border-left: 3px solid var(--red); }
+
+    .detail-box strong { color: var(--gray-900); }
+    .detail-box ul { margin: 8px 0 0 20px; }
+    .detail-box li { margin-bottom: 4px; }
+
+    /* ── Comparison Table ── */
+    .compare-table {
+      width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem;
+    }
+    .compare-table th {
+      background: var(--brand); color: white; padding: 12px 16px;
+      text-align: left; font-weight: 600; font-size: 0.82rem; text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .compare-table td {
+      padding: 12px 16px; border-bottom: 1px solid var(--gray-200);
+    }
+    .compare-table tr:nth-child(even) td { background: var(--gray-100); }
+    .compare-table .tag {
+      display: inline-block; padding: 2px 10px; border-radius: 12px;
+      font-size: 0.72rem; font-weight: 600;
+    }
+    .tag-green { background: var(--green-light); color: var(--green); }
+    .tag-orange { background: var(--orange-light); color: var(--orange); }
+    .tag-red { background: var(--red-light); color: var(--red); }
+    .tag-blue { background: var(--blue-light); color: var(--blue); }
+
+    /* ── Screenshot Placeholder ── */
+    .screenshot-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+      margin: 24px 0;
+    }
+    .screenshot {
+      background: white; border-radius: var(--radius); box-shadow: var(--shadow);
+      overflow: hidden; border: 1px solid var(--gray-200);
+    }
+    .screenshot img {
+      width: 100%; display: block; border-bottom: 1px solid var(--gray-200);
+    }
+    .screenshot .img-placeholder {
+      width: 100%; height: 220px; display: flex; align-items: center; justify-content: center;
+      background: var(--gray-100); color: var(--gray-500); font-size: 0.85rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .screenshot .caption {
+      padding: 12px 16px; font-size: 0.82rem; font-weight: 600; color: var(--gray-700);
+    }
+
+    /* ── Key Metrics ── */
+    .metrics {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;
+      margin: 24px 0;
+    }
+    .metric {
+      background: white; border-radius: var(--radius); padding: 20px; text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .metric .value { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+    .metric .label { font-size: 0.78rem; color: var(--gray-700); margin-top: 4px; font-weight: 500; }
+
+    /* ── Fee Breakdown ── */
+    .fee-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;
+      margin: 20px 0;
+    }
+    .fee-card {
+      background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
+    }
+    .fee-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .fee-row {
+      display: flex; justify-content: space-between; padding: 6px 0;
+      border-bottom: 1px dashed var(--gray-200); font-size: 0.88rem;
+    }
+    .fee-row:last-child { border-bottom: none; font-weight: 700; padding-top: 10px; border-top: 2px solid var(--gray-300); }
+    .fee-row .fee-label { color: var(--gray-700); }
+    .fee-row .fee-value { font-weight: 600; }
+
+    /* ── Nav ── */
+    .toc {
+      background: white; border-radius: var(--radius); padding: 24px 28px;
+      box-shadow: var(--shadow); margin: -24px auto 0; position: relative; z-index: 2;
+      max-width: 900px;
+    }
+    .toc h3 { margin-top: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); margin-bottom: 12px; }
+    .toc-items { display: flex; flex-wrap: wrap; gap: 10px; }
+    .toc-item {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 8px; background: var(--gray-100);
+      text-decoration: none; color: var(--gray-900); font-size: 0.85rem; font-weight: 500;
+      transition: background 0.2s;
+    }
+    .toc-item:hover { background: var(--accent-light); color: var(--accent); }
+    .toc-item .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero { padding: 40px 20px; }
+      .hero h1 { font-size: 1.8rem; }
+      .flow { flex-direction: column; align-items: flex-start; }
+      .flow-arrow { transform: rotate(90deg); padding: 4px 0; }
+    }
+
+    /* ── Print ── */
+    @media print {
+      .hero { padding: 30px 20px; }
+      section { padding: 24px 0; }
+      .scenario, .fee-card, .metric { box-shadow: none; border: 1px solid var(--gray-300); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <h1>Show Crew Network</h1>
+  <p class="subtitle">Payment Flows — How money moves from Company to Crew</p>
+  <div class="date-badge">📅 29 April 2026 &nbsp;·&nbsp; Leadership Demo</div>
+</div>
+
+<!-- ═══════════ TABLE OF CONTENTS ═══════════ -->
+<div class="container">
+  <div class="toc">
+    <h3>Agenda</h3>
+    <div class="toc-items">
+      <a href="#overview" class="toc-item"><span class="dot" style="background:var(--accent)"></span>Payment Overview</a>
+      <a href="#flow1" class="toc-item"><span class="dot" style="background:var(--green)"></span>Flow 1 — Happy Path</a>
+      <a href="#flow2" class="toc-item"><span class="dot" style="background:var(--orange)"></span>Flow 2 — ACH Retry</a>
+      <a href="#flow3" class="toc-item"><span class="dot" style="background:var(--blue)"></span>Flow 3 — Card Immediate</a>
+      <a href="#flow4" class="toc-item"><span class="dot" style="background:var(--red)"></span>Flow 4 — Full Escalation</a>
+      <a href="#fees" class="toc-item"><span class="dot" style="background:var(--gray-500)"></span>Fee Structure</a>
+      <a href="#screenshots" class="toc-item"><span class="dot" style="background:var(--gray-500)"></span>Screenshots</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ OVERVIEW ═══════════ -->
+<div class="container">
+  <section id="overview">
+    <h2><span class="num">💰</span> Payment Overview</h2>
+    <p class="section-desc">
+      SCN uses a <strong>commitment-based</strong> payment system. When a company hires crew, funds are charged to the company's bank account (ACH) or card and held in a <strong>holding account</strong> until the job is complete. Crew is paid out 7 days after the event ends.
+    </p>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="value">ACH</div>
+        <div class="label">Primary Payment Method</div>
+      </div>
+      <div class="metric">
+        <div class="value">Card</div>
+        <div class="label">Backup / Fallback</div>
+      </div>
+      <div class="metric">
+        <div class="value">7 days</div>
+        <div class="label">ACH Settlement Window</div>
+      </div>
+      <div class="metric">
+        <div class="value">T−7</div>
+        <div class="label">Card Takeover Threshold</div>
+      </div>
+    </div>
+
+    <h3>How Batches Work</h3>
+    <div class="detail-box">
+      <strong>Batching triggers (in priority order):</strong>
+      <ul>
+        <li><strong>T-7 Final:</strong> Event is within 7 days — force-batch all unbatched hires</li>
+        <li><strong>Threshold:</strong> Unbatched hires ≥ 25% of crew needed since last batch</li>
+        <li><strong>Weekly:</strong> No batch in last 7 days + unbatched hires exist (anchored at T-14, T-21, T-28)</li>
+      </ul>
+    </div>
+
+    <h3>Commitment Lifecycle</h3>
+    <table class="compare-table">
+      <thead>
+        <tr><th>Status</th><th>Meaning</th><th>What's Happening</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-blue">committed</span></td>
+          <td>Hire accepted</td>
+          <td>Crew is booked, payment not yet batched</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-orange">batch_initiated</span></td>
+          <td>In a batch</td>
+          <td>PaymentIntent created, Stripe is processing</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-orange">escrow_pending</span></td>
+          <td>Awaiting settlement</td>
+          <td>ACH in transit, typically 3–5 business days</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">escrow_reserved</span></td>
+          <td>Funds held</td>
+          <td>Money confirmed in holding account</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">payout_pending</span></td>
+          <td>Ready to pay crew</td>
+          <td>Job completed, waiting for 7-day release window</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">paid</span></td>
+          <td>Crew paid</td>
+          <td>Stripe transfer sent to crew's connected account</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══════════ FLOW 1: HAPPY PATH ═══════════ -->
+  <section id="flow1">
+    <div class="scenario happy">
+      <div class="scenario-header">
+        <div class="scenario-icon">✅</div>
+        <div>
+          <div class="scenario-title">Flow 1 — Happy Path</div>
+          <div class="scenario-subtitle">ACH passes on first try · Most common scenario</div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step info">
+          <div class="node">👤</div>
+          <div class="label">Company hires crew</div>
+          <div class="sublabel">committed</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step info">
+          <div class="node">📦</div>
+          <div class="label">Batch triggers</div>
+          <div class="sublabel">threshold / weekly / T-7</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step pending">
+          <div class="node">🏦</div>
+          <div class="label">ACH initiated</div>
+          <div class="sublabel">batch_initiated</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step pending">
+          <div class="node">⏳</div>
+          <div class="label">ACH in transit</div>
+          <div class="sublabel">escrow_pending · 3-5 days</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">🔒</div>
+          <div class="label">Funds held</div>
+          <div class="sublabel">escrow_reserved</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">🎬</div>
+          <div class="label">Event happens</div>
+          <div class="sublabel">Time reconciled</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">💸</div>
+          <div class="label">Crew paid</div>
+          <div class="sublabel">paid · +7 days</div>
+        </div>
+      </div>
+
+      <div class="detail-box green-box">
+        <strong>Key Details:</strong>
+        <ul>
+          <li>ACH charged at <strong>0.8% (capped at $5)</strong> — cheapest option</li>
+          <li>Company sees "Funds Held" status on their dashboard</li>
+          <li>Crew sees "Payment Confirmed" with expected payout date</li>
+          <li>After event ends + time confirmed → payout scheduled for <strong>endDate + 7 days</strong></li>
+          <li>Platform fee (5%) + Stripe fee collected as <code>application_fee_amount</code></li>
+        </ul>
+      </div>
+
+      <div class="screenshot-row">
+        <div class="screenshot">
+          <div class="img-placeholder">📸 Screenshot: Funds held status on dashboard</div>
+          <!-- <img src="photos/flow1-funds-held.png" alt="Funds held"> -->
+          <div class="caption">Company Dashboard — Funds Held confirmation</div>
+        </div>
+        <div class="screenshot">
+          <div class="img-placeholder">📸 Screenshot: Crew payout confirmed</div>
+          <!-- <img src="photos/flow1-crew-payout.png" alt="Crew payout"> -->
+          <div class="caption">Crew Portal — Payout scheduled</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FLOW 2: ACH RETRY ═══════════ -->
+  <section id="flow2">
+    <div class="scenario retry">
+      <div class="scenario-header">
+        <div class="scenario-icon">🔄</div>
+        <div>
+          <div class="scenario-title">Flow 2 — ACH Retry</div>
+          <div class="scenario-subtitle">ACH fails in 1st batch, ACH retried in 2nd batch · NACHA-compliant (max 2 retries)</div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step info">
+          <div class="node">📦</div>
+          <div class="label">Batch 1 created</div>
+          <div class="sublabel">ACH initiated</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step fail">
+          <div class="node">❌</div>
+          <div class="label">ACH fails</div>
+          <div class="sublabel">R01 insufficient funds</div>
+        </div>
+        <div class="flow-arrow retry-arrow">⤵</div>
+        <div class="flow-step pending">
+          <div class="node">⏸️</div>
+          <div class="label">24h grace</div>
+          <div class="sublabel">Manual card option</div>
+        </div>
+        <div class="flow-arrow retry-arrow">→</div>
+        <div class="flow-step info">
+          <div class="node">📦</div>
+          <div class="label">Batch 2 created</div>
+          <div class="sublabel">retryCount: 1</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step pending">
+          <div class="node">🏦</div>
+          <div class="label">ACH retry</div>
+          <div class="sublabel">2nd attempt</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">✅</div>
+          <div class="label">ACH clears</div>
+          <div class="sublabel">escrow_reserved</div>
+        </div>
+      </div>
+
+      <div class="detail-box orange-box">
+        <strong>Retry Logic (NACHA Compliant):</strong>
+        <ul>
+          <li><strong>Max 2 ACH retries</strong> per NACHA rules for transient codes (R01 insufficient funds, R09 uncollected)</li>
+          <li>After failure → commitments reset to <code>committed</code> status after 24h grace</li>
+          <li>During 24h grace: company can choose to <strong>pay via card manually</strong></li>
+          <li>Next batch trigger picks up the failed commitments with <code>retryCount + 1</code></li>
+          <li>If still &gt; 7 days to event → ACH retried (cheaper). If &lt; 7 days → switches to card</li>
+          <li>Idempotency key: <code>retry-{commitmentId}-{attempt}</code> prevents double-charges</li>
+        </ul>
+      </div>
+
+      <div class="screenshot-row">
+        <div class="screenshot">
+          <div class="img-placeholder">📸 Screenshot: ACH failure notification</div>
+          <!-- <img src="photos/flow2-ach-failure.png" alt="ACH failure"> -->
+          <div class="caption">Admin — ACH failure with retry status</div>
+        </div>
+        <div class="screenshot">
+          <div class="img-placeholder">📸 Screenshot: Manual card payment option</div>
+          <!-- <img src="photos/flow2-manual-card.png" alt="Manual card"> -->
+          <div class="caption">Company — "Pay Now" card fallback during grace window</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FLOW 3: CARD IMMEDIATE ═══════════ -->
+  <section id="flow3">
+    <div class="scenario card-immediate">
+      <div class="scenario-header">
+        <div class="scenario-icon">💳</div>
+        <div>
+          <div class="scenario-title">Flow 3 — Card Immediate (&lt;7 days to event)</div>
+          <div class="scenario-subtitle">Event is less than 7 days away — ACH can't settle in time, card charged immediately</div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step info">
+          <div class="node">👤</div>
+          <div class="label">Company hires crew</div>
+          <div class="sublabel">Event in 4 days</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step info">
+          <div class="node">⚠️</div>
+          <div class="label">T-7 check</div>
+          <div class="sublabel">ACH can't settle</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step card">
+          <div class="node">💳</div>
+          <div class="label">Card charged instantly</div>
+          <div class="sublabel">confirmPaymentIntent</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">🔒</div>
+          <div class="label">Funds held</div>
+          <div class="sublabel">escrow_reserved (instant)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">🎬</div>
+          <div class="label">Event happens</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">💸</div>
+          <div class="label">Crew paid</div>
+          <div class="sublabel">+7 days</div>
+        </div>
+      </div>
+
+      <div class="detail-box blue-box">
+        <strong>Why Card Inside 7 Days?</strong>
+        <ul>
+          <li>ACH takes <strong>3–5 business days</strong> to settle via NACHA / Stripe</li>
+          <li>With &lt;7 days to event, there's risk funds won't arrive before the crew works</li>
+          <li>Card charges confirm <strong>instantly</strong> — crew hire is secured immediately</li>
+          <li>If card is <strong>declined</strong>: hire is rolled back, crew is released</li>
+          <li>Card fee is higher: <strong>2.9% + $0.30</strong> (vs ACH 0.8% capped at $5)</li>
+          <li>Company's saved card (backup payment method) is used off-session</li>
+        </ul>
+      </div>
+
+      <div class="screenshot-row">
+        <div class="screenshot">
+          <div class="img-placeholder">📸 Screenshot: Card charge confirmation</div>
+          <!-- <img src="photos/flow3-card-charge.png" alt="Card charge"> -->
+          <div class="caption">Instant card charge — funds secured immediately</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FLOW 4: FULL ESCALATION ═══════════ -->
+  <section id="flow4">
+    <div class="scenario escalation">
+      <div class="scenario-header">
+        <div class="scenario-icon">🚨</div>
+        <div>
+          <div class="scenario-title">Flow 4 — Full Escalation (ACH Fails → Time Passes → Card Fallback)</div>
+          <div class="scenario-subtitle">ACH fails early, by next batch we're inside the 7-day window — system auto-escalates to card</div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step info">
+          <div class="node">📦</div>
+          <div class="label">Batch 1</div>
+          <div class="sublabel">T-12 days</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step pending">
+          <div class="node">🏦</div>
+          <div class="label">ACH initiated</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step fail">
+          <div class="node">❌</div>
+          <div class="label">ACH fails</div>
+          <div class="sublabel">Day 3 notification</div>
+        </div>
+        <div class="flow-arrow fail-arrow">⤵</div>
+        <div class="flow-step pending">
+          <div class="node">⏸️</div>
+          <div class="label">Grace window</div>
+          <div class="sublabel">24h manual card</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step pending">
+          <div class="node">📅</div>
+          <div class="label">Time passes…</div>
+          <div class="sublabel">Now T-5 days</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step info">
+          <div class="node">📦</div>
+          <div class="label">Batch 2 (T-7)</div>
+          <div class="sublabel">final_t7 trigger</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step pending">
+          <div class="node">🏦</div>
+          <div class="label">ACH retry</div>
+          <div class="sublabel">attempt 2</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step fail">
+          <div class="node">❌</div>
+          <div class="label">ACH fails again</div>
+        </div>
+        <div class="flow-arrow fail-arrow">⤵</div>
+        <div class="flow-step card">
+          <div class="node">💳</div>
+          <div class="label">Card fallback</div>
+          <div class="sublabel">Auto-charge card</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step success">
+          <div class="node">✅</div>
+          <div class="label">Funds secured</div>
+          <div class="sublabel">escrow_reserved</div>
+        </div>
+      </div>
+
+      <div class="detail-box red-box">
+        <strong>Escalation Decision Tree:</strong>
+        <ul>
+          <li><strong>Batch 1 fails (T-12):</strong> ACH fails → 24h grace for manual card → commitments reset to <code>committed</code></li>
+          <li><strong>Time passes:</strong> Next batch trigger fires at T-7 (<code>final_t7</code>)</li>
+          <li><strong>Batch 2 (T-5):</strong> System detects <code>retryCount &gt; 0</code> + <code>daysToEvent &lt; 7</code></li>
+          <li><strong>ACH retried anyway</strong> (NACHA allows one more try since retryCount &lt; 2)</li>
+          <li><strong>ACH fails again:</strong> System immediately falls back to card (no waiting)</li>
+          <li><strong>Card charged:</strong> Uses <code>stripeCardPaymentMethodId</code> off-session</li>
+          <li><strong>If card also fails:</strong>
+            <ul>
+              <li>If ≥1 day to event → open manual window, company can retry via UI</li>
+              <li>If &lt;1 day to event → <strong>rollback hires</strong>, cancel job if no other funded crew</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <h3>Escalation Timeline Example</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Day</th><th>Event</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>T-14</strong></td>
+            <td>Crew hired, batch 1 created</td>
+            <td><span class="tag tag-blue">batch_initiated</span></td>
+            <td>ACH PaymentIntent created</td>
+          </tr>
+          <tr>
+            <td><strong>T-11</strong></td>
+            <td>ACH failure webhook</td>
+            <td><span class="tag tag-red">failed</span></td>
+            <td>24h grace window opens, admin notified</td>
+          </tr>
+          <tr>
+            <td><strong>T-10</strong></td>
+            <td>Grace expires, no manual pay</td>
+            <td><span class="tag tag-blue">committed</span></td>
+            <td>Reset to committed, retryCount = 1</td>
+          </tr>
+          <tr>
+            <td><strong>T-7</strong></td>
+            <td>final_t7 batch triggers</td>
+            <td><span class="tag tag-orange">batch_initiated</span></td>
+            <td>ACH retry #2 (still within NACHA limit)</td>
+          </tr>
+          <tr>
+            <td><strong>T-5</strong></td>
+            <td>ACH fails again</td>
+            <td><span class="tag tag-red">failed</span></td>
+            <td>Auto card fallback — card charged immediately</td>
+          </tr>
+          <tr>
+            <td><strong>T-5</strong></td>
+            <td>Card succeeds ✅</td>
+            <td><span class="tag tag-green">escrow_reserved</span></td>
+            <td>Funds secured, crew hire confirmed</td>
+          </tr>
+          <tr>
+            <td><strong>T+0</strong></td>
+            <td>Event day</td>
+            <td><span class="tag tag-green">escrow_reserved</span></td>
+            <td>Crew works, times recorded</td>
+          </tr>
+          <tr>
+            <td><strong>T+7</strong></td>
+            <td>Payout day</td>
+            <td><span class="tag tag-green">paid</span></td>
+            <td>Stripe transfer to crew connected account</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="screenshot-row">
+        <div class="screenshot">
+          <div class="img-placeholder">📸 Screenshot: ACH failure → Card fallback in admin</div>
+          <!-- <img src="photos/flow4-escalation.png" alt="Escalation"> -->
+          <div class="caption">Admin — Batch escalation from ACH to card</div>
+        </div>
+        <div class="screenshot">
+          <div class="img-placeholder">📸 Screenshot: Manual pay window</div>
+          <!-- <img src="photos/flow4-manual-window.png" alt="Manual pay"> -->
+          <div class="caption">Company — Manual card payment during grace window</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ MANUAL PAYMENTS ═══════════ -->
+  <section>
+    <h2><span class="num">🔧</span> Manual Card Payments</h2>
+    <p class="section-desc">
+      At any point between batches, companies can use their <strong>backup card</strong> to make one-off payments. This is available during ACH grace windows and for supplemental invoices after time reconciliation.
+    </p>
+
+    <div class="detail-box blue-box">
+      <strong>When Manual Card is Available:</strong>
+      <ul>
+        <li><strong>During ACH grace window:</strong> 24 hours after an ACH failure — company sees "Pay Now" button</li>
+        <li><strong>Supplemental invoices:</strong> After time reconciliation, if crew worked more hours than committed</li>
+        <li><strong>Card option expires</strong> 1 hour before the next batch window (prevents race conditions)</li>
+        <li>Card charged at <strong>2.9% + $0.30</strong> (higher than ACH but instant)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════ FEE STRUCTURE ═══════════ -->
+  <section id="fees">
+    <h2><span class="num">📊</span> Fee Structure</h2>
+    <p class="section-desc">Every payment includes a platform fee plus Stripe processing. Fees are "grossed up" so the crew receives their full rate.</p>
+
+    <div class="fee-grid">
+      <div class="fee-card">
+        <h4>🏦 ACH Payment — $1,000 crew payout</h4>
+        <div class="fee-row">
+          <span class="fee-label">Crew Payout</span>
+          <span class="fee-value">$1,000.00</span>
+        </div>
+        <div class="fee-row">
+          <span class="fee-label">Platform Fee (5%)</span>
+          <span class="fee-value">$50.00</span>
+        </div>
+        <div class="fee-row">
+          <span class="fee-label">Stripe ACH (0.8%, max $5)</span>
+          <span class="fee-value">$5.00</span>
+        </div>
+        <div class="fee-row">
+          <span class="fee-label"><strong>Company Charged</strong></span>
+          <span class="fee-value"><strong>$1,055.00</strong></span>
+        </div>
+      </div>
+
+      <div class="fee-card">
+        <h4>💳 Card Payment — $1,000 crew payout</h4>
+        <div class="fee-row">
+          <span class="fee-label">Crew Payout</span>
+          <span class="fee-value">$1,000.00</span>
+        </div>
+        <div class="fee-row">
+          <span class="fee-label">Platform Fee (5%)</span>
+          <span class="fee-value">$50.00</span>
+        </div>
+        <div class="fee-row">
+          <span class="fee-label">Stripe Card (2.9% + $0.30)</span>
+          <span class="fee-value">$30.80</span>
+        </div>
+        <div class="fee-row">
+          <span class="fee-label"><strong>Company Charged</strong></span>
+          <span class="fee-value"><strong>$1,080.80</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-box">
+      <strong>Fee Math — Card Gross-Up Formula:</strong><br>
+      <code>chargeAmount = (crewTotal + platformFee + $0.30) / (1 − 0.029)</code><br>
+      This ensures the platform collects exactly 5% regardless of payment method. The Stripe processing fee is absorbed into the total charge.
+    </div>
+  </section>
+
+  <!-- ═══════════ COMPARISON ═══════════ -->
+  <section>
+    <h2><span class="num">⚖️</span> Flow Comparison</h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Payment Method</th>
+          <th>Processing Fee</th>
+          <th>Settlement</th>
+          <th>When It Happens</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Flow 1:</strong> Happy Path</td>
+          <td><span class="tag tag-green">ACH</span></td>
+          <td>0.8% (max $5)</td>
+          <td>3–5 business days</td>
+          <td>Most jobs — everything works on first try</td>
+        </tr>
+        <tr>
+          <td><strong>Flow 2:</strong> ACH Retry</td>
+          <td><span class="tag tag-orange">ACH → ACH</span></td>
+          <td>0.8% (max $5)</td>
+          <td>+3–5 days per attempt</td>
+          <td>Insufficient funds, bank processing delays</td>
+        </tr>
+        <tr>
+          <td><strong>Flow 3:</strong> Card Immediate</td>
+          <td><span class="tag tag-blue">Card</span></td>
+          <td>2.9% + $0.30</td>
+          <td>Instant</td>
+          <td>Hire within 7 days of event</td>
+        </tr>
+        <tr>
+          <td><strong>Flow 4:</strong> Full Escalation</td>
+          <td><span class="tag tag-red">ACH → ACH → Card</span></td>
+          <td>2.9% + $0.30 (final)</td>
+          <td>Instant (card)</td>
+          <td>ACH fails twice + event approaching</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══════════ SCREENSHOTS ═══════════ -->
+  <section id="screenshots">
+    <h2><span class="num">📸</span> Screenshots</h2>
+    <p class="section-desc">
+      Add screenshots to the <code>photos/</code> folder and uncomment the <code>&lt;img&gt;</code> tags above to display them in context with each flow.
+    </p>
+
+    <div class="detail-box">
+      <strong>Screenshot slots ready:</strong>
+      <ul>
+        <li><code>photos/flow1-funds-held.png</code> — Company dashboard showing "Funds Held" status</li>
+        <li><code>photos/flow1-crew-payout.png</code> — Crew portal showing payout scheduled</li>
+        <li><code>photos/flow2-ach-failure.png</code> — Admin view of ACH failure with retry status</li>
+        <li><code>photos/flow2-manual-card.png</code> — Company "Pay Now" card fallback button</li>
+        <li><code>photos/flow3-card-charge.png</code> — Instant card charge confirmation</li>
+        <li><code>photos/flow4-escalation.png</code> — Admin batch escalation view</li>
+        <li><code>photos/flow4-manual-window.png</code> — Manual card payment grace window</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════ SAFEGUARDS ═══════════ -->
+  <section>
+    <h2><span class="num">🛡️</span> Safety Guardrails</h2>
+    <div class="detail-box green-box">
+      <strong>Built-in protections:</strong>
+      <ul>
+        <li><strong>Idempotency:</strong> Every Stripe call uses unique keys — safe to retry, no double-charges</li>
+        <li><strong>Distributed locking:</strong> Prevents two batch processes from racing on the same job (5-min TTL)</li>
+        <li><strong>NACHA compliance:</strong> Maximum 2 ACH retries for transient failure codes</li>
+        <li><strong>Card validation:</strong> System verifies card is actually type <code>card</code> (not accidentally a bank account)</li>
+        <li><strong>Hard deadline (T-1):</strong> If all payments fail within 24h of event → hires rolled back, crew released</li>
+        <li><strong>Grace windows:</strong> Company always gets a manual recovery option before automatic escalation</li>
+        <li><strong>Batch splitting:</strong> Exhausted retries (≥2) get card batch, fresh ones get ACH — optimizes cost</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<div style="text-align: center; padding: 40px 20px; color: var(--gray-500); font-size: 0.8rem;">
+  Show Crew Network · Internal Demo · 29 April 2026 · Confidential
+</div>
+
+</body>
+</html>
