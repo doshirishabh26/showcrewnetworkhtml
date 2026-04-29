@@ -444,8 +444,8 @@
         <div class="flow-arrow retry-arrow">⤵</div>
         <div class="flow-step pending">
           <div class="node">⏸️</div>
-          <div class="label">24h grace</div>
-          <div class="sublabel">Manual card option</div>
+          <div class="label">Grace window</div>
+          <div class="sublabel">Until next batch</div>
         </div>
         <div class="flow-arrow retry-arrow">→</div>
         <div class="flow-step info">
@@ -471,10 +471,11 @@
         <strong>Retry Logic (NACHA Compliant):</strong>
         <ul>
           <li><strong>Max 2 ACH retries</strong> per NACHA rules for transient codes (R01 insufficient funds, R09 uncollected)</li>
-          <li>After failure → commitments reset to <code>committed</code> status after 24h grace</li>
-          <li>During 24h grace: company can choose to <strong>pay via card manually</strong></li>
+          <li>After failure → grace window opens <strong>until the next batch is processed</strong></li>
+          <li>During grace: company can choose to <strong>pay via card manually</strong> (card button disappears 1h before next batch to prevent race conditions)</li>
           <li>Next batch trigger picks up the failed commitments with <code>retryCount + 1</code></li>
           <li>If still &gt; 7 days to event → ACH retried (cheaper). If &lt; 7 days → switches to card</li>
+          <li>If no future batch window found (already inside T-7) → fallback to fixed 24h grace</li>
           <li>Idempotency key: <code>retry-{commitmentId}-{attempt}</code> prevents double-charges</li>
         </ul>
       </div>
@@ -593,7 +594,7 @@
         <div class="flow-step pending">
           <div class="node">⏸️</div>
           <div class="label">Grace window</div>
-          <div class="sublabel">24h manual card</div>
+          <div class="sublabel">Until next batch</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step pending">
@@ -635,7 +636,7 @@
       <div class="detail-box red-box">
         <strong>Escalation Decision Tree:</strong>
         <ul>
-          <li><strong>Batch 1 fails (T-12):</strong> ACH fails → 24h grace for manual card → commitments reset to <code>committed</code></li>
+          <li><strong>Batch 1 fails (T-12):</strong> ACH fails → grace window opens until next batch → commitments reset to <code>committed</code></li>
           <li><strong>Time passes:</strong> Next batch trigger fires at T-7 (<code>final_t7</code>)</li>
           <li><strong>Batch 2 (T-5):</strong> System detects <code>retryCount &gt; 0</code> + <code>daysToEvent &lt; 7</code></li>
           <li><strong>ACH retried anyway</strong> (NACHA allows one more try since retryCount &lt; 2)</li>
@@ -730,9 +731,9 @@
     <div class="detail-box blue-box">
       <strong>When Manual Card is Available:</strong>
       <ul>
-        <li><strong>During ACH grace window:</strong> 24 hours after an ACH failure — company sees "Pay Now" button</li>
+          <li><strong>During ACH grace window:</strong> After an ACH failure, company sees "Pay Now" button until the next batch fires (card button disappears 1h before to prevent race conditions)</li>
         <li><strong>Supplemental invoices:</strong> After time reconciliation, if crew worked more hours than committed</li>
-        <li><strong>Card option expires</strong> 1 hour before the next batch window (prevents race conditions)</li>
+          <li><strong>Card option expires</strong> 1 hour before the next batch window (prevents race conditions with the ACH cron)</li>
         <li>Card charged at <strong>2.9% + $0.30</strong> (higher than ACH but instant)</li>
       </ul>
     </div>
