@@ -667,13 +667,13 @@
             <td><strong>T-11</strong></td>
             <td>ACH failure webhook</td>
             <td><span class="tag tag-red">failed</span></td>
-            <td>24h grace window opens, admin notified</td>
+            <td>Grace window opens until next batch (T-7), admin notified</td>
           </tr>
           <tr>
-            <td><strong>T-10</strong></td>
-            <td>Grace expires, no manual pay</td>
+            <td><strong>T-8</strong></td>
+            <td>Grace expires (1h before T-7 batch)</td>
             <td><span class="tag tag-blue">committed</span></td>
-            <td>Reset to committed, retryCount = 1</td>
+            <td>Card option removed, reset to committed, retryCount = 1</td>
           </tr>
           <tr>
             <td><strong>T-7</strong></td>
